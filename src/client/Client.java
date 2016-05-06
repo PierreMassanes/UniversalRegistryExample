@@ -3,58 +3,52 @@ package client;
 import UniversalRegistry.URegistry;
 import data.Donnee;
 import data.DonneeImpl;
+import data.Service;
+import data.ServiceImpl;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.List;
 
-public class Client {
-    public static void main(String[] args) {
+public class Client implements MessageListener, Serializable {
+    private String consumerName;
+    public Client(String consumerName) {
+        this.consumerName = consumerName;
+    }
+
+    public void onMessage(Message message) {
+        TextMessage textMessage = (TextMessage) message;
         try {
+            System.out.println(consumerName + " received " + textMessage.getText());
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+    }
 
-            if(System.getSecurityManager() == null){
-                System.setSecurityManager(new java.rmi.RMISecurityManager());
-            }
-
+    public void startClient(){
+        try {
             URegistry reg= (URegistry) Naming.lookup("rmi://localhost/registry");
-            reg.addCodebase("/home/user/IdeaProjects/UniversalRegistryExample/out/production/UniversalRegistryExample");
-            reg.rebind("Donnee", new DonneeImpl("name","surname"));
-            Donnee data = (Donnee) reg.get("Donnee");
-            System.out.println(data);
-            /*reg.rebind("Vieux", new Integer(100));
-            reg.rebind("Entier1", new Integer(1));
-            reg.rebind("Entier2", new Integer(2));
-            reg.rebind("Entier3", new Integer(3));
-            reg.rebind("Entier4", new Integer(4));
-            reg.rebind("Entier5", new Integer(5));
-            reg.get("Vieux");
-            reg.get("Vieux");
-            reg.get("Vieux");
-            reg.get("Vieux");
-            reg.get("Entier1");
-            reg.get("Entier3");
-            reg.get("Entier1");
-            reg.get("Entier3");
-            reg.get("Entier1");
-            reg.get("Entier1");
-            List<String> res= reg.getPopularKey(2);
-            for (String s: res)
-                System.out.println(s);*/
-            /*reg.iniConnection();
-            reg.suscribe("Bob");
-            reg.publish("Coucou!!");
-            reg.suscribe("Marie");
-            reg.publish("Hello!!");
-            reg.closeConnection();*/
-            /*TopicConnection connection= reg.suscribe();
-            TopicSession topicSession = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-            TopicSubscriber topicSubscriber = topicSession.createSubscriber(connection);
-            topicConn.start();*/
+            Service s= new ServiceImpl();
+            reg.rebind("Service", s);
+            ServiceImpl s1= (ServiceImpl)reg.get("Service");
+            System.out.println(s.getInfo());
+            s1.iniConnection();
+            s1.suscribe(this);
+            s1.publish("Hello!!");
+            Donnee d= new DonneeImpl("Bob", "White");
+            reg.rebind("Donnee", d);
+            DonneeImpl d1= (DonneeImpl)reg.get("Donnee");
+            System.out.println(d1);
         } catch (MalformedURLException | RemoteException | NotBoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
+
 }

@@ -1,6 +1,5 @@
 package data;
 
-import client.ConsumerMessageListener;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
@@ -49,11 +48,11 @@ public class ServiceImpl implements Service, Serializable {
     }
 
     @Override
-    public void suscribe(String clientName) {
+    public void suscribe(MessageListener listener) {
         MessageConsumer consumer = null;
         try {
             consumer = session.createConsumer(topic);
-            consumer.setMessageListener(new ConsumerMessageListener(clientName));
+            consumer.setMessageListener(listener);
         } catch (JMSException e) {
             e.printStackTrace();
         }
