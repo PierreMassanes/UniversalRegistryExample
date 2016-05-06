@@ -1,5 +1,6 @@
 package UniversalRegistry;
 
+
 import java.rmi.AlreadyBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -14,4 +15,5 @@ public interface URegistry extends Remote {
     List<Object> getLastObjects(int until) throws RemoteException;
     List<String> getLastKeys(int until) throws RemoteException;
     List<String> getPopularKey(int until) throws RemoteException;
+    void addCodebase(String classpath) throws RemoteException;
 }
