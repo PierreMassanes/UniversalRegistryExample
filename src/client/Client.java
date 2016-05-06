@@ -34,6 +34,7 @@ public class Client implements MessageListener, Serializable {
     public void startClient(){
         try {
             URegistry reg= (URegistry) Naming.lookup("rmi://localhost/registry");
+            reg.addCodebase("/home/user/IdeaProjects/UniversalRegistryExample/out/production/UniversalRegistryExample");
             Service s= new ServiceImpl();
             reg.rebind("Service", s);
             ServiceImpl s1= (ServiceImpl)reg.get("Service");
