@@ -1,11 +1,14 @@
 package client;
 
 import UniversalRegistry.URegistry;
+import data.Service;
+import data.ServiceImpl;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.security.Provider;
 import java.util.List;
 
 public class Client {
@@ -31,6 +34,8 @@ public class Client {
             List<String> res= reg.getPopularKey(2);
             for (String s: res)
                 System.out.println(s);
+            Service service= new ServiceImpl();
+
             /*reg.iniConnection();
             reg.suscribe("Bob");
             reg.publish("Coucou!!");
