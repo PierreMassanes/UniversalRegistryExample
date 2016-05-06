@@ -1,9 +1,11 @@
 package data;
 
+import java.io.Serializable;
+
 /**
  * Created by user on 05/05/16.
  */
-public class DonneeImpl implements Donnee {
+public class DonneeImpl implements Donnee, Serializable {
     String name;
     String surname;
 

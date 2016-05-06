@@ -1,9 +1,11 @@
 package data;
 
+import java.io.Serializable;
+
 /**
  * Created by user on 06/05/16.
  */
-public class Test implements ReponseService {
+public class Test implements ReponseService, Serializable {
     int i;
     String s;
 
@@ -14,6 +16,6 @@ public class Test implements ReponseService {
 
     @Override
     public String getInfo() {
-        return null;
+        return i+s;
     }
 }
