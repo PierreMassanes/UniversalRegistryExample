@@ -1,5 +1,6 @@
 package data;
 
+import javax.jms.MessageListener;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -10,7 +11,7 @@ public interface Service extends Remote {
     String getInfo() throws RemoteException;
     ReponseService accesService() throws RemoteException;
     void iniConnection() throws RemoteException;
-    void suscribe(String clientName) throws RemoteException;
+    void suscribe(MessageListener listener) throws RemoteException;
     void closeConnection() throws RemoteException;
     void publish(String content) throws RemoteException;
 }
