@@ -6,15 +6,20 @@ import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
 
 import javax.jms.*;
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * Created by user on 05/05/16.
  */
-public class ServiceImpl implements Service {
+public class ServiceImpl implements Service, Serializable {
     private ReponseService reponseService;
     private Topic topic ;
     private Session session;
+
+    public ServiceImpl(){
+        reponseService= new Test(4, "Hello");
+    }
 
     @Override
     public String getInfo() {
