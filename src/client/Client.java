@@ -51,5 +51,4 @@ public class Client implements MessageListener, Serializable {
             e.printStackTrace();
         }
     }
-
 }
