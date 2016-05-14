@@ -1,4 +1,4 @@
-package data;
+package protocol;
 
 /**
  * Created by user on 05/05/16.

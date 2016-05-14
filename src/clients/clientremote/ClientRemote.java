@@ -1,9 +1,8 @@
-package clientremote;
+package clients.clientremote;
 
 import UniversalRegistry.URegistry;
-import data.IClientRemote;
-import data.ServiceClient;
-import data.ServiceClientImpl;
+import protocol.IClientRemote;
+import protocol.ServiceClient;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -20,7 +19,7 @@ public class ClientRemote extends UnicastRemoteObject implements IClientRemote {
 
     @Override
     public void sayHello() throws RemoteException {
-        System.out.println("Hello I'm a remote client !");
+        System.out.println("Hello I'm a remote clients.client !");
     }
 
     public static void main(String[] args) {
@@ -28,7 +27,6 @@ public class ClientRemote extends UnicastRemoteObject implements IClientRemote {
             IClientRemote client = new ClientRemote();
 
             URegistry reg= (URegistry) Naming.lookup("rmi://localhost/registry");
-            reg.addCodebase("/home/user/IdeaProjects/UniversalRegistryExample/out/production/UniversalRegistryExample");
             ServiceClient serviceClient = new ServiceClientImpl();
             reg.rebind("serviceclient", serviceClient);
             ServiceClientImpl scimpl = (ServiceClientImpl) reg.get("serviceclient");

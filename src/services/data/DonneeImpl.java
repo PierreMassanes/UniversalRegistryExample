@@ -1,4 +1,6 @@
-package data;
+package services.data;
+
+import protocol.Donnee;
 
 import java.io.Serializable;
 

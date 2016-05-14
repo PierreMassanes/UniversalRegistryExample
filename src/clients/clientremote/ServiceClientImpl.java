@@ -1,4 +1,8 @@
-package data;
+package clients.clientremote;
+
+import protocol.IClientRemote;
+import protocol.ReponseService;
+import protocol.ServiceClient;
 
 import javax.jms.MessageListener;
 import java.io.Serializable;

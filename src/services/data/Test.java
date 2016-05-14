@@ -1,4 +1,6 @@
-package data;
+package services.data;
+
+import protocol.ReponseService;
 
 import java.io.Serializable;
 

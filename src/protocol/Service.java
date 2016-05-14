@@ -1,4 +1,4 @@
-package data;
+package protocol;
 
 import javax.jms.MessageListener;
 import java.rmi.Remote;

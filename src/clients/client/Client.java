@@ -1,10 +1,8 @@
-package client;
+package clients.client;
 
 import UniversalRegistry.URegistry;
-import data.Donnee;
-import data.DonneeImpl;
-import data.Service;
-import data.ServiceImpl;
+import protocol.Donnee;
+import protocol.Service;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -34,18 +32,13 @@ public class Client implements MessageListener, Serializable {
     public void startClient(){
         try {
             URegistry reg= (URegistry) Naming.lookup("rmi://localhost/registry");
-            reg.addCodebase("/home/user/IdeaProjects/UniversalRegistryExample/out/production/UniversalRegistryExample");
-            Service s= new ServiceImpl();
-            reg.rebind("Service", s);
-            ServiceImpl s1= (ServiceImpl)reg.get("Service");
+            Service s= (Service)reg.get("Service");
             System.out.println(s.getInfo());
-            s1.iniConnection();
-            s1.suscribe(this);
-            s1.publish("Hello!!");
-            Donnee d= new DonneeImpl("Bob", "White");
-            reg.rebind("Donnee", d);
-            DonneeImpl d1= (DonneeImpl)reg.get("Donnee");
-            System.out.println(d1);
+            s.iniConnection();
+            s.suscribe(this);
+            s.publish("Hello!!");
+            Donnee d = (Donnee)reg.get("Donnee");
+            System.out.println(d);
         } catch (MalformedURLException | RemoteException | NotBoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

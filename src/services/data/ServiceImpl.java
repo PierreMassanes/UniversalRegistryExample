@@ -1,8 +1,10 @@
-package data;
+package services.data;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
+import protocol.ReponseService;
+import protocol.Service;
 
 import javax.jms.*;
 import java.io.Serializable;
