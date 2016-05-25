@@ -11,48 +11,53 @@ import java.io.Serializable;
 import java.net.URI;
 
 /**
- * Created by user on 05/05/16.
+ * Created by user on 25/05/16.
  */
-public class ServiceImpl implements Service, Serializable {
+public class ServiceCook implements Service, Serializable {
     private ReponseService reponseService;
     private Topic topic ;
-    private Session session;
+    ConnectionFactory connectionFactory;
+    //private Session session;
 
-    public ServiceImpl(){
-        reponseService= new Test(4, "Hello");
+    public ServiceCook(){
+        reponseService= new ReponseServiceCook();
     }
 
-    @Override
-    public String getInfo() {
+        @Override
+        public String getInfo() {
         return reponseService.getInfo();
     }
 
-    @Override
-    public ReponseService accesService() {
+        @Override
+        public ReponseService accesService() {
         return reponseService;
     }
 
-    @Override
-    public void iniConnection() {
+        @Override
+        public void iniConnection() {
         BrokerService broker = null;
         try {
             broker = BrokerFactory.createBroker(new URI("broker:(tcp://localhost:61616)"));
             broker.start();
             Connection connection = null;
-            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+            connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
             connection = connectionFactory.createConnection();
-            session = connection.createSession(false,
+            Session session = connection.createSession(false,
                     Session.AUTO_ACKNOWLEDGE);
             topic = session.createTopic("customerTopic");
+            connection.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void suscribe(MessageListener listener) {
+        @Override
+        public void suscribe(MessageListener listener) {
         MessageConsumer consumer = null;
         try {
+            Connection connection= connectionFactory.createConnection();
+            Session session= connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            connection.start();
             consumer = session.createConsumer(topic);
             consumer.setMessageListener(listener);
         } catch (JMSException e) {
@@ -60,11 +65,15 @@ public class ServiceImpl implements Service, Serializable {
         }
     }
 
-    @Override
-    public void publish(String nom, String content){
+        @Override
+        public void publish(String nom, String content){
         Message msg = null;
         try {
-            msg = session.createTextMessage(content);
+            System.out.println("test");
+            Connection connection= connectionFactory.createConnection();
+            Session session= connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            connection.start();
+            msg = session.createTextMessage("--"+ nom + "--: "+content);
             MessageProducer producer = session.createProducer(topic);
             System.out.println("Sending text '" + content + "'");
             producer.send(msg);
@@ -73,12 +82,10 @@ public class ServiceImpl implements Service, Serializable {
         }
     }
 
-    @Override
-    public void closeConnection(){
-        try {
-            session.close();
-        } catch (JMSException e) {
-            e.printStackTrace();
+        @Override
+        public void closeConnection(){
+        //TODO
         }
-    }
 }
+
+

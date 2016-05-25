@@ -3,6 +3,7 @@ package clients.client;
 import UniversalRegistry.URegistry;
 import protocol.Donnee;
 import protocol.Service;
+import services.data.DonneeCook;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -14,32 +15,35 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-public class Client implements MessageListener, Serializable {
-    private String consumerName;
-    public Client(String consumerName) {
-        this.consumerName = consumerName;
+/**
+ * Created by user on 25/05/16.
+ */
+public class ClientCook implements MessageListener, Serializable {
+    private String pseudo;
+
+    public ClientCook(String pseudo) {
+        this.pseudo = pseudo;
     }
 
     public void onMessage(Message message) {
         TextMessage textMessage = (TextMessage) message;
         try {
-            System.out.println(consumerName + " received " + textMessage.getText());
+            System.out.println(pseudo + " received " + textMessage.getText());
         } catch (JMSException e) {
             e.printStackTrace();
         }
     }
 
-    public void startClient(){
+    public void startClient() {
         try {
-            URegistry reg= (URegistry) Naming.lookup("rmi://localhost/registry");
-            Service s= (Service)reg.get("Service");
+            URegistry reg = (URegistry) Naming.lookup("rmi://localhost/registry");
+            Service s = (Service) reg.get("ServiceCook");
             System.out.println(s.getInfo());
-            s.iniConnection();
             s.suscribe(this);
-            //s.publish("Hello!!");
-            Donnee d = (Donnee)reg.get("Donnee");
-            System.out.println(d);
-            s.closeConnection();
+            s.publish(pseudo, "Bonjour. Je vous déconseille le cuisinier François Martin. Sa cuisine était trop salée.");
+            DonneeCook d = (DonneeCook) reg.get("DonneeCook");
+            System.out.println(pseudo + " lit la recette: " + d);
+            //s.closeConnection();
         } catch (MalformedURLException | RemoteException | NotBoundException | ClassCastException e) {
             e.printStackTrace();
         }

@@ -13,5 +13,5 @@ public interface Service extends Remote {
     void iniConnection() throws RemoteException;
     void suscribe(MessageListener listener) throws RemoteException;
     void closeConnection() throws RemoteException;
-    void publish(String content) throws RemoteException;
+    void publish(String nom, String content) throws RemoteException;
 }

@@ -1,8 +1,9 @@
 package clients.client;
 
 import UniversalRegistry.URegistry;
-import protocol.Donnee;
 import protocol.Service;
+import services.data.DonneeCook;
+import services.data.ServiceCook;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -14,31 +15,31 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-public class Client implements MessageListener, Serializable {
-    private String consumerName;
-    public Client(String consumerName) {
-        this.consumerName = consumerName;
+/**
+ * Created by user on 25/05/16.
+ */
+public class ClientCook2 implements MessageListener, Serializable {
+    private String pseudo;
+
+    public ClientCook2(String pseudo) {
+        this.pseudo = pseudo;
     }
 
     public void onMessage(Message message) {
         TextMessage textMessage = (TextMessage) message;
         try {
-            System.out.println(consumerName + " received " + textMessage.getText());
+            System.out.println(pseudo + " received " + textMessage.getText());
         } catch (JMSException e) {
             e.printStackTrace();
         }
     }
 
-    public void startClient(){
+    public void startClient() {
         try {
-            URegistry reg= (URegistry) Naming.lookup("rmi://localhost/registry");
-            Service s= (Service)reg.get("Service");
-            System.out.println(s.getInfo());
-            s.iniConnection();
+            URegistry reg = (URegistry) Naming.lookup("rmi://localhost/registry");
+            Service s = (Service) reg.get("ServiceCook");
             s.suscribe(this);
-            //s.publish("Hello!!");
-            Donnee d = (Donnee)reg.get("Donnee");
-            System.out.println(d);
+            s.publish(pseudo, "Bonjour. Je vous j'ai trouvé la cuisine de François Martin super!");
             s.closeConnection();
         } catch (MalformedURLException | RemoteException | NotBoundException | ClassCastException e) {
             e.printStackTrace();
